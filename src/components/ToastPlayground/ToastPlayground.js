@@ -1,30 +1,23 @@
 import React from 'react';
 
 import Button from '../Button';
-
 import styles from './ToastPlayground.module.css';
 import ToastShelf from "../ToastShelf";
+import { ToastContext } from '../ToastProvider/ToastProvider';
 
 const VARIANT_OPTIONS = ['notice', 'warning', 'success', 'error'];
 
 function ToastPlayground() {
   const [toastType, setToastType] = React.useState('notice');
-  const [message, setMessage] = React.useState('');
-  const [toasts, setToasts] = React.useState([]);
+  const { addToast } = React.useContext(ToastContext);
+  const messageRef = React.useRef(null);
 
-  const addToast = (event)=> {
+  function createNewToast(event) {
     event.preventDefault();
-    if (!message) return;
-    const uniqueKey = crypto.randomUUID();
-    const newToast = {
-      key:uniqueKey,
-      toastId:uniqueKey,
-      status:toastType,
-      message
-    };
-    setToasts([...toasts, newToast]);
+    let message = messageRef.current.value;
+    addToast(message, toastType);
+    message = '';
     setToastType('notice');
-    setMessage('');
   }
 
   return (
@@ -33,7 +26,7 @@ function ToastPlayground() {
         <img alt="Cute toast mascot" src="/toast.png" />
         <h1>Toast Playground</h1>
       </header>
-      <ToastShelf toasts={toasts} setToasts={setToasts}/>
+      <ToastShelf/>
       <div className={styles.controlsWrapper}>
         <div className={styles.row}>
           <label
@@ -44,7 +37,7 @@ function ToastPlayground() {
             Message
           </label>
           <div className={styles.inputWrapper}>
-            <textarea id="message" className={styles.messageInput} value={message} onChange={e => setMessage(e.target.value)} />
+            <textarea ref={messageRef} id="message" className={styles.messageInput} />
           </div>
         </div>
 
@@ -74,7 +67,7 @@ function ToastPlayground() {
           <div
             className={`${styles.inputWrapper} ${styles.radioWrapper}`}
           >
-            <form onSubmit={(event) => addToast(event)}>
+            <form onSubmit={(event) => createNewToast(event)}>
               <Button>Pop Toast!</Button>
             </form>
           </div>
