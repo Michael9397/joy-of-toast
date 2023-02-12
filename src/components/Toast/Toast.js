@@ -19,10 +19,6 @@ const ICONS_BY_VARIANT = {
 };
 
 function Toast({ status, message, cancelToast, toastId }) {
-
-  const key = toastId;
-  const getId = () => key;
-
   if (!message) return null;
   const Icon = ICONS_BY_VARIANT[status];
 
