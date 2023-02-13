@@ -4,7 +4,7 @@ import Button from '../Button';
 import styles from './ToastPlayground.module.css';
 import ToastShelf from "../ToastShelf";
 import { ToastContext } from '../ToastProvider/ToastProvider';
-
+import VisuallyHidden from '../VisuallyHidden';
 const VARIANT_OPTIONS = ['notice', 'warning', 'success', 'error'];
 
 function ToastPlayground() {
@@ -14,9 +14,8 @@ function ToastPlayground() {
 
   function createNewToast(event) {
     event.preventDefault();
-    let message = messageRef.current.value;
-    addToast(message, toastType);
-    message = '';
+    addToast(messageRef.current.value, toastType);
+    messageRef.current.value = '';
     setToastType('notice');
   }
 
@@ -68,7 +67,12 @@ function ToastPlayground() {
             className={`${styles.inputWrapper} ${styles.radioWrapper}`}
           >
             <form onSubmit={(event) => createNewToast(event)}>
-              <Button>Pop Toast!</Button>
+              <Button>
+                Pop Toast!
+                <VisuallyHidden>
+                  Dismiss message
+                </VisuallyHidden>
+              </Button>
             </form>
           </div>
         </div>
